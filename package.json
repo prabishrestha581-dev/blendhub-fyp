@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/react-fontawesome": "^3.5.0",
+    "better-auth": "^1.7.15",
     "next": "16.4.3",
     "pg": "^8.23.1",
     "react": "19.3.0",
