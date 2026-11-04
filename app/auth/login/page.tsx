@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import type { SubmitEvent } from "react";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -30,7 +32,8 @@ export default function Login() {
         return;
       }
 
-      setMessage("Logged in successfully!");
+      router.push("/dashboard");
+      router.refresh();
     } catch {
       setMessage("Unable to connect. Please try again.");
     } finally {
@@ -88,7 +91,12 @@ export default function Login() {
             <div className="text-center">
               <p>
                 Don't have an acccount?{" "}
-                <Link href="/auth/register">Sign up</Link>
+                <Link
+                  href="/auth/register"
+                  className="text-blue-400 hover:text-blue-500 hover:underline"
+                >
+                  Sign up
+                </Link>
               </p>
             </div>
           </form>
