@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import CafeForm from "./cafe-form";
+import Link from "next/link";
 
 export default function SetupCafePage() {
   return (
@@ -29,6 +30,12 @@ async function SetupCafeContent() {
           Enter your café’s name to get started.
         </p>
         <CafeForm />
+        <Link
+          href="/dashboard"
+          className="mt-4 inline-block text-sm text-blue-600 hover:underline"
+        >
+          Back to dashboard
+        </Link>
       </div>
     </main>
   );
