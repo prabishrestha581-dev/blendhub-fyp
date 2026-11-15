@@ -40,7 +40,29 @@ export default function Register() {
     }
   }
 
-    return (
+  async function handleGoogleSignUp() {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+
+      if (error) {
+        setMessage(error.message ?? "Google sign-up failed.");
+        setIsLoading(false);
+      }
+    } catch {
+      setMessage("Unable to connect. Please try again.");
+      setIsLoading(false);
+    }
+  }
+
+  return (
     <main className="relative isolate grid min-h-screen overflow-hidden bg-[#faf6ee] text-[#2b1709] lg:grid-cols-[56%_44%]">
       <section className="relative z-10 flex flex-col px-6 py-8 sm:px-12 lg:px-[12%]">
         <Image
@@ -56,9 +78,7 @@ export default function Register() {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Create your <span className="text-[#a85520]">account</span>
             </h1>
-            <p className="mt-3">
-              Start managing your café with BlendHub.
-            </p>
+            <p className="mt-3">Start managing your café with BlendHub.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -121,6 +141,21 @@ export default function Register() {
             <p role="status" className="text-sm">
               {message}
             </p>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-[#2b1709]/20" />
+              <span className="text-sm">or</span>
+              <div className="h-px flex-1 bg-[#2b1709]/20" />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignUp}
+              disabled={isLoading}
+              className="w-full rounded-md border border-[#2b1709]/40 bg-white px-4 py-3 font-medium hover:bg-[#f0e8dc] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Continue with Google
+            </button>
 
             <p className="text-center text-sm">
               Already have an account?{" "}
