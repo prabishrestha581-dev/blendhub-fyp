@@ -12,6 +12,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -138,11 +139,19 @@ export default function Login() {
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   className="border border-blue-100 rounded-md p-1"
                 />
               </div>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-controls="password"
+                className="self-end text-sm text-[#a85520] hover:underline"
+              >
+                {showPassword ? "Hide password" : "Show password"}
+              </button>
 
               <Link
                 href="/auth/forgot-password"
@@ -175,14 +184,21 @@ export default function Login() {
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={isLoading}
-                className="w-full rounded-md border border-[#2b1709]/40 bg-white px-4 py-3 font-medium hover:bg-[#f0e8dc] disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-3 rounded-md bg-black px-4 py-3 font-medium hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-50 text-amber-50"
               >
+                <img
+                  src="/google.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 shrink-0"
+                />
                 Continue with Google
               </button>
 
               <div className="text-center">
                 <p>
-                  Don&apos;t have an acccount?{" "}
+                  Don't have an acccount?{" "}
                   <Link
                     href="/auth/register"
                     className="text-blue-400 hover:text-blue-500 hover:underline"

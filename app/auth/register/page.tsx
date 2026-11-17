@@ -9,6 +9,7 @@ import Image from "next/image";
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -117,7 +118,7 @@ export default function Register() {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 minLength={8}
                 maxLength={128}
@@ -125,6 +126,14 @@ export default function Register() {
                 aria-describedby="password-hint"
                 className="rounded-md border border-[#2b1709]/30 px-3 py-3 outline-none focus:border-[#a85520] focus:ring-2 focus:ring-[#a85520]/20"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-controls="password"
+                className="self-end text-sm text-[#a85520] hover:underline"
+              >
+                {showPassword ? "Hide password" : "Show password"}
+              </button>
               <p id="password-hint" className="text-sm text-[#2b1709]/70">
                 Use at least 8 characters.
               </p>
@@ -152,8 +161,15 @@ export default function Register() {
               type="button"
               onClick={handleGoogleSignUp}
               disabled={isLoading}
-              className="w-full rounded-md border border-[#2b1709]/40 bg-white px-4 py-3 font-medium hover:bg-[#f0e8dc] disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-3 rounded-md text-amber-50 bg-black px-4 py-3 font-medium hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-50"
             >
+              <Image
+                src="/google.svg"
+                alt=""
+                width={20}
+                height={20}
+                className="h-5 w-5 shrink-0 object-contain"
+              />
               Continue with Google
             </button>
 
