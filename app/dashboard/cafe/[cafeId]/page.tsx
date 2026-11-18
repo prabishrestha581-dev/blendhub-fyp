@@ -5,6 +5,9 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import MenuItemForm from "./menu-item-form";
+import MenuItemEditor from "./menu-item-editor";
+import AvailabilityButton from "./availability-button";
+import DeleteMenuItemButton from "./delete-menu-item-button";
 
 type Props = { params: Promise<{ cafeId: string }> };
 
@@ -81,6 +84,33 @@ async function CafeContent({ params }: Props) {
                 <p className="mt-2 text-sm">
                   {item.is_available ? "Available" : "Unavailable"}
                 </p>
+                {cafe.role === "owner" && (
+                  <MenuItemEditor
+                    cafeId={cafeId}
+                    item={{
+                      id: item.id,
+                      name: item.name,
+                      category: item.category,
+                      price: item.price,
+                    }}
+                  />
+                )}
+
+                {cafe.role === "owner" && (
+                  <AvailabilityButton
+                    cafeId={cafeId}
+                    itemId={item.id}
+                    isAvailable={item.is_available}
+                  />
+                )}
+
+                {cafe.role === "owner" && (
+                  <DeleteMenuItemButton
+                    cafeId={cafeId}
+                    itemId={item.id}
+                    itemName={item.name}
+                  />
+                )}
               </article>
             ))}
           </div>
