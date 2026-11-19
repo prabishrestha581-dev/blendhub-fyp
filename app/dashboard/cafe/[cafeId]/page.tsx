@@ -59,6 +59,19 @@ async function CafeContent({ params }: Props) {
       <p className="mt-2 text-sm text-gray-600">Your role: {cafe.role}</p>
       {cafe.role === "owner" && <MenuItemForm cafeId={cafeId} />}
 
+      <Link
+        href={`/menu/${cafeId}`}
+        className="mt-4 inline-block text-sm font-medium text-blue-700 hover:underline"
+      >
+        View customer menu
+      </Link>
+      <Link
+        href={`/dashboard/cafe/${cafeId}/orders`}
+        className="mt-4 block text-sm font-medium text-blue-700 hover:underline"
+      >
+        View incoming orders
+      </Link>
+
       <section className="mt-8">
         <h2 className="text-xl font-semibold">Your menu</h2>
 
