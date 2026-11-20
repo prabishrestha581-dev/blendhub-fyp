@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CheckoutForm from "./checkout-form";
+import Link from "next/link";
 
 type MenuItem = {
   id: string;
@@ -22,6 +23,7 @@ export default function MenuWithCart({
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [checkoutLocked, setCheckoutLocked] = useState(false);
   const [orderMessage, setOrderMessage] = useState("");
+  const [trackingUrl, setTrackingUrl] = useState<string | null>(null);
 
   function changeQuantity(itemId: string, change: number) {
     if (checkoutLocked) return;
@@ -114,6 +116,15 @@ export default function MenuWithCart({
             {orderMessage}
           </p>
         )}
+        {trackingUrl && (
+          <Link
+            href={trackingUrl}
+            prefetch={false}
+            className="mt-4 inline-block rounded-md bg-[#2b1709] px-4 py-2 text-white"
+          >
+            Track your order
+          </Link>
+        )}
 
         {cartItems.length === 0 ? (
           <p className="mt-4 text-sm text-[#2b1709]/70">Your cart is empty.</p>
@@ -184,10 +195,15 @@ export default function MenuWithCart({
                 quantity: quantities[item.id],
               }))}
               onLockChange={setCheckoutLocked}
-              onOrdered={(orderId, total) => {
+              onOrdered={(orderId, total, trackingToken) => {
                 setOrderMessage(
                   `Order placed! Reference: ${orderId}. Total: NPR ${total}. Collect and pay at the café.`,
                 );
+
+                setTrackingUrl(
+                  `/orders/${orderId}?token=${encodeURIComponent(trackingToken)}`,
+                );
+
                 setQuantities({});
               }}
             />

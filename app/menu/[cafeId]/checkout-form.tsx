@@ -11,7 +11,7 @@ type Props = {
   cafeId: string;
   items: { id: string; quantity: number }[];
   onLockChange: (locked: boolean) => void;
-  onOrdered: (orderId: string, total: string) => void;
+  onOrdered: (orderId: string, total: string, trackingToken: string) => void;
 };
 
 export default function CheckoutForm({
@@ -73,7 +73,7 @@ export default function CheckoutForm({
 
       setPendingOrder(null);
       onLockChange(false);
-      onOrdered(result.orderId, result.total);
+      onOrdered(result.orderId, result.total, result.trackingToken);
     } catch {
       setMessage(
         "The connection was interrupted. Retry to check or complete this same order.",

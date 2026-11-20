@@ -18,8 +18,14 @@ type OrderResult =
       retryable?: boolean;
       orderId?: never;
       total?: never;
+      trackingToken?: never;
     }
-  | { error?: never; orderId: string; total: string };
+  | {
+      error?: never;
+      orderId: string;
+      total: string;
+      trackingToken: string;
+    };
 class OrderError extends Error {}
 
 const uuidPattern =
@@ -49,7 +55,7 @@ export async function placeOrder(input: OrderInput): Promise<OrderResult> {
     input.customerPhone,
   );
 
-  if (customer.error) {
+  if (customer.error !== undefined) {
     return { error: customer.error };
   }
 
@@ -94,20 +100,27 @@ export async function placeOrder(input: OrderInput): Promise<OrderResult> {
     await client.query("BEGIN");
 
     // Claim this request ID. The unique constraint prevents duplicates.
-    const inserted = await client.query<{ id: string }>(
+    const inserted = await client.query<{
+      id: string;
+      tracking_token: string;
+    }>(
       `INSERT INTO cafe_order
          (cafe_id, request_id, customer_name, customer_phone, total)
        VALUES ($1, $2, $3, $4, 0)
        ON CONFLICT (cafe_id, request_id) DO NOTHING
-       RETURNING id`,
+       RETURNING id, tracking_token`,
       [input.cafeId, input.requestId, name, phone],
     );
 
     // A retry of an already saved order returns the original result.
     if (inserted.rows.length === 0) {
-      const previous = await client.query<{ id: string; total: string }>(
-        `SELECT id, total FROM cafe_order
-         WHERE cafe_id = $1 AND request_id = $2`,
+      const previous = await client.query<{
+        id: string;
+        total: string;
+        tracking_token: string;
+      }>(
+        `SELECT id, total, tracking_token FROM cafe_order
+        WHERE cafe_id = $1 AND request_id = $2`,
         [input.cafeId, input.requestId],
       );
 
@@ -120,6 +133,7 @@ export async function placeOrder(input: OrderInput): Promise<OrderResult> {
       return {
         orderId: previous.rows[0].id,
         total: previous.rows[0].total,
+        trackingToken: previous.rows[0].tracking_token,
       };
     }
 
@@ -159,8 +173,7 @@ export async function placeOrder(input: OrderInput): Promise<OrderResult> {
 
       // Convert the database decimal string to whole paisa.
       const [rupees, paisa = ""] = item.price.split(".");
-      const unitPaisa =
-        Number(rupees) * 100 + Number(paisa.padEnd(2, "0"));
+      const unitPaisa = Number(rupees) * 100 + Number(paisa.padEnd(2, "0"));
 
       totalPaisa += unitPaisa * quantity;
 
@@ -174,14 +187,18 @@ export async function placeOrder(input: OrderInput): Promise<OrderResult> {
 
     const total = (totalPaisa / 100).toFixed(2);
 
-    await client.query(
-      `UPDATE cafe_order SET total = $1 WHERE id = $2`,
-      [total, orderId],
-    );
+    await client.query(`UPDATE cafe_order SET total = $1 WHERE id = $2`, [
+      total,
+      orderId,
+    ]);
 
     await client.query("COMMIT");
 
-    return { orderId, total };
+    return {
+      orderId,
+      total,
+      trackingToken: inserted.rows[0].tracking_token,
+    };
   } catch (error) {
     if (client) {
       try {
