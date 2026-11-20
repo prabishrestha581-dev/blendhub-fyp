@@ -1,0 +1,20 @@
+app/menu/[cafeId]/menu-with-cart.tsx
+  s_8ad17c3e128483::t_7dbab86bfd0304 26,119-127,198,202-206
+  s_8ad17c3e128483::t_68df544aec91cb 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "0d6fa596b68b140ccf82d56663841b25a8d3c971",
+  "prompts": {},
+  "sessions": {
+    "s_8ad17c3e128483": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f16c-719e-7102-b28c-7d7a9a160204",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Prabish Shrestha <prabishrestha581@gmail.com>"
+    }
+  }
+}
