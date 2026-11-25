@@ -1,0 +1,43 @@
+app/dashboard/cafe/[cafeId]/orders/page.tsx
+  h_2a225fa833201f 52,66,83-84
+  h_2a225fa833201f 50-51,64-65,75-82,85-86
+app/dashboard/cafe/[cafeId]/team/actions.ts
+  h_2a225fa833201f 1-140
+database/migrations/006_add_kitchen_role.sql
+  h_2a225fa833201f 1-10
+app/dashboard/cafe/[cafeId]/team/page.tsx
+  s_8ad17c3e128483::t_8403a082abd8d6 92-98,105
+  h_2a225fa833201f 1-91,99-104
+app/dashboard/cafe/[cafeId]/team/team-member-controls.tsx
+  h_2a225fa833201f 1-101
+app/dashboard/cafe/[cafeId]/kitchen/page.tsx
+  h_2a225fa833201f 48,61,78
+app/dashboard/cafe/[cafeId]/orders/actions.ts
+  h_2a225fa833201f 21,26,30,34,38,42,57,66
+  h_2a225fa833201f 81
+app/dashboard/cafe/[cafeId]/team/team-member-form.tsx
+  h_2a225fa833201f 1-92
+app/dashboard/cafe/[cafeId]/page.tsx
+  h_2a225fa833201f 38-41,72,87-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "b6c6e478bb9d079432d3c35d651e5b3ebd26b956",
+  "prompts": {},
+  "humans": {
+    "h_2a225fa833201f": {
+      "author": "Prabish Shrestha <prabishrestha581@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_8ad17c3e128483": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f16c-719e-7102-b28c-7d7a9a160204",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Prabish Shrestha <prabishrestha581@gmail.com>"
+    }
+  }
+}
