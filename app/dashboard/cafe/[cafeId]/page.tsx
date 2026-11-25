@@ -65,11 +65,19 @@ async function CafeContent({ params }: Props) {
       >
         View customer menu
       </Link>
+      
       <Link
         href={`/dashboard/cafe/${cafeId}/orders`}
         className="mt-4 block text-sm font-medium text-blue-700 hover:underline"
       >
         View incoming orders
+      </Link>
+
+      <Link
+        href={`/dashboard/cafe/${cafeId}/kitchen`}
+        className="mt-4 block text-sm font-medium text-blue-700 hover:underline"
+      >
+        Open kitchen display
       </Link>
 
       <section className="mt-8">
