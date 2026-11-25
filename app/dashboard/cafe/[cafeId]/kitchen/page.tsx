@@ -45,7 +45,7 @@ async function KitchenContent({ params }: Props) {
      JOIN cafe_member AS member ON member.cafe_id = cafe.id
      WHERE cafe.id::text = $1
        AND member.user_id = $2
-       AND member.role IN ('owner', 'staff')`,
+       AND member.role IN ('owner', 'staff', 'kitchen')`,
     [cafeId, session.user.id],
   );
 
@@ -58,7 +58,7 @@ async function KitchenContent({ params }: Props) {
      JOIN cafe_member AS member ON member.cafe_id = orders.cafe_id
      WHERE orders.cafe_id::text = $1
        AND member.user_id = $2
-       AND member.role IN ('owner', 'staff')
+       AND member.role IN ('owner', 'staff', 'kitchen')
        AND orders.status IN ('accepted', 'preparing')
      ORDER BY orders.created_at ASC, orders.id ASC
      LIMIT 50`,
@@ -75,7 +75,7 @@ async function KitchenContent({ params }: Props) {
      WHERE item.order_id = ANY($1::uuid[])
        AND orders.cafe_id::text = $2
        AND member.user_id = $3
-       AND member.role IN ('owner', 'staff')
+       AND member.role IN ('owner', 'staff', 'kitchen')
      ORDER BY item.id`,
     [orderIds, cafeId, session.user.id],
   );

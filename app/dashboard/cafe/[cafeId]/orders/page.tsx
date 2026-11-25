@@ -47,7 +47,9 @@ async function OrdersContent({ params }: Props) {
     `SELECT cafe.name
      FROM cafe
      JOIN cafe_member ON cafe_member.cafe_id = cafe.id
-     WHERE cafe.id::text = $1 AND cafe_member.user_id = $2`,
+     WHERE cafe.id::text = $1 
+      AND cafe_member.user_id = $2 
+      AND cafe_member.role IN ('owner', 'staff')`,
     [cafeId, session.user.id],
   );
 
@@ -59,7 +61,9 @@ async function OrdersContent({ params }: Props) {
             orders.status, orders.total
      FROM cafe_order AS orders
      JOIN cafe_member AS member ON member.cafe_id = orders.cafe_id
-     WHERE orders.cafe_id::text = $1 AND member.user_id = $2
+     WHERE orders.cafe_id::text = $1 
+      AND member.user_id = $2
+      AND member.role IN ('owner', 'staff')
      ORDER BY orders.created_at DESC, orders.id DESC
      LIMIT 50`,
     [cafeId, session.user.id],
@@ -68,17 +72,18 @@ async function OrdersContent({ params }: Props) {
   const orderIds = ordersResult.rows.map((order) => order.id);
 
   const itemsResult = await db.query<OrderItem>(
-    `SELECT item.id, item.order_id, item.item_name,
-            item.unit_price, item.quantity
-     FROM order_item AS item
-     JOIN cafe_order AS orders ON orders.id = item.order_id
-     JOIN cafe_member AS member ON member.cafe_id = orders.cafe_id
-     WHERE item.order_id = ANY($1::uuid[])
-       AND orders.cafe_id::text = $2
-       AND member.user_id = $3
-     ORDER BY item.id`,
-    [orderIds, cafeId, session.user.id],
-  );
+  `SELECT item.id, item.order_id, item.item_name,
+          item.unit_price, item.quantity
+   FROM order_item AS item
+   JOIN cafe_order AS orders ON orders.id = item.order_id
+   JOIN cafe_member AS member ON member.cafe_id = orders.cafe_id
+   WHERE item.order_id = ANY($1::uuid[])
+     AND orders.cafe_id::text = $2
+     AND member.user_id = $3
+     AND member.role IN ('owner', 'staff')
+   ORDER BY item.id`,
+  [orderIds, cafeId, session.user.id],
+);
 
   return (
     <main className="mx-auto max-w-5xl p-6">

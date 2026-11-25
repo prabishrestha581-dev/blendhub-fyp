@@ -18,22 +18,28 @@ export async function updateOrderStatus(
   }
 
   let allowedCurrentStatuses: string[];
+  let allowedRoles: string[];
 
   switch (nextStatus) {
     case "accepted":
       allowedCurrentStatuses = ["pending"];
+      allowedRoles = ["owner", "staff"];
       break;
     case "preparing":
       allowedCurrentStatuses = ["accepted"];
+      allowedRoles = ["owner", "staff", "kitchen"];
       break;
     case "ready":
       allowedCurrentStatuses = ["preparing"];
+      allowedRoles = ["owner", "staff", "kitchen"];
       break;
     case "completed":
       allowedCurrentStatuses = ["ready"];
+      allowedRoles = ["owner", "staff"];
       break;
     case "cancelled":
       allowedCurrentStatuses = ["pending", "accepted"];
+      allowedRoles = ["owner", "staff"];
       break;
     default:
       return { error: "Invalid order status." };
@@ -48,7 +54,7 @@ export async function updateOrderStatus(
          AND orders.cafe_id::text = $2
          AND member.cafe_id = orders.cafe_id
          AND member.user_id = $3
-         AND member.role IN ('owner', 'staff')
+         AND member.role = ANY($6::text[])
          AND orders.status = ANY($5::text[])
        RETURNING orders.id`,
       [
@@ -57,6 +63,7 @@ export async function updateOrderStatus(
         session.user.id,
         nextStatus,
         allowedCurrentStatuses,
+        allowedRoles,
       ],
     );
 

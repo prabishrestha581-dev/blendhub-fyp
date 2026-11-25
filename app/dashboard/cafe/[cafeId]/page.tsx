@@ -35,6 +35,10 @@ async function CafeContent({ params }: Props) {
   const cafe = rows[0];
   if (!cafe) notFound();
 
+  if (cafe.role === "kitchen") {
+    redirect(`/dashboard/cafe/${cafeId}/kitchen`);
+  }
+
   const menuResult = await db.query<{
     id: string;
     name: string;
@@ -65,7 +69,7 @@ async function CafeContent({ params }: Props) {
       >
         View customer menu
       </Link>
-      
+
       <Link
         href={`/dashboard/cafe/${cafeId}/orders`}
         className="mt-4 block text-sm font-medium text-blue-700 hover:underline"
@@ -79,6 +83,15 @@ async function CafeContent({ params }: Props) {
       >
         Open kitchen display
       </Link>
+
+      {cafe.role === "owner" && (
+        <Link
+          href={`/dashboard/cafe/${cafeId}/team`}
+          className="mt-4 block text-sm font-medium text-blue-700 hover:underline"
+        >
+          Manage team
+        </Link>
+      )}
 
       <section className="mt-8">
         <h2 className="text-xl font-semibold">Your menu</h2>
